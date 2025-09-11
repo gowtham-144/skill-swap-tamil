@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -31,3 +31,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";
