@@ -30,7 +30,11 @@ export default function Onboard() {
   );
 }
 
-function SkillCheck({ title, selected, setSelected }: any) {
+function SkillCheck({ title, selected, setSelected }: {
+  title: string;
+  selected: number[];
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+}) {
   const skills = ['Arduino', 'Photoshop', 'Spoken English', 'Tailoring', 'Python', 'Welding', 'Maths', 'Video Editing'];
   return (
     <div className="mb-6">
