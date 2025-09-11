@@ -5,14 +5,15 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function Dashboard() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [list, setList] = useState<{ id: string; name: string; nameTa: string }[]>([]);
 
   useEffect(() => {
-    fetch('/api/match').then(r => r.json()).then(setList);
-  }, []);
+    if (status === 'authenticated') fetch('/api/match').then(r => r.json()).then(setList);
+  }, [status]);
 
-  if (!session) return <p>Please log in</p>;
+  if (status === 'loading') return <p>Loading...</p>;
+  if (status === 'unauthenticated') return <p>Please log in</p>;
 
   return (
     <div className="p-8">
