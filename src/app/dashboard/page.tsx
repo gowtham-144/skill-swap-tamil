@@ -18,7 +18,7 @@ export default function Dashboard() {
   return (
     <div className="p-8">
       <h2 className="text-2xl font-bold mb-4">உங்கள் பொருத்தங்கள்</h2>
-      {list.length === 0 && <p>இன்னும் பொருத்தம் இல்லை. மேலும் திறன்கள் சேர்க்கவும்.</p>}
+      {list.length  === 0 && <p>இன்னும் பொருத்தம் இல்லை. மேலும் திறன்கள் சேர்க்கவும்.</p>}
       {list.map((u) => (
         <div key={u.id} className="border rounded p-4 mb-3 flex justify-between items-center">
           <div>

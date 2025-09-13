@@ -90,6 +90,3 @@ function SkillCheck({
     </div>
   );
 }
-
-// 🚀 Prevents Next.js from prerendering at build time
-export const dynamic = 'force-dynamic';
