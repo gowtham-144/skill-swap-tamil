@@ -1,68 +1,18 @@
 'use client';
-
-export const dynamic = 'force-dynamic'; // ✅ stops prerender
+export const dynamic = 'force-dynamic';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Link from 'next/link';
 
-export default function Onboard() {
-  const session = useSession(); // no destructuring
-  const router = useRouter();
-  const [teach, setTeach] = useState<number[]>([]);
-  const [learn, setLearn] = useState<number[]>([]);
-
+export default function Dashboard() {
+  const session = useSession();
   if (session.status === 'loading') return <p>Loading...</p>;
   if (session.status === 'unauthenticated') return <p>Please log in</p>;
 
-  async function submit() {
-    await fetch('/api/onboard', {
-      method: 'POST',
-      body: JSON.stringify({ teach, learn }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-    router.push('/dashboard');
-  }
-
-  const skills = ['Arduino', 'Photoshop', 'Spoken English', 'Tailoring', 'Python', 'Welding', 'Maths', 'Video Editing'];
-
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4">திறன்களை தேர்ந்தெடுக்கவும்</h2>
-
-      <SkillCheck title="நீங்கள் கற்றுத் தர இயலும்" selected={teach} setSelected={setTeach} />
-      <SkillCheck title="நீங்கள் கற்றுக்கொள்ள விரும்பும்" selected={learn} setSelected={setLearn} />
-
-      <button onClick={submit} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">சேமி</button>
-    </div>
-  );
-}
-
-function SkillCheck({ title, selected, setSelected }: {
-  title: string;
-  selected: number[];
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
-}) {
-  const skills = ['Arduino', 'Photoshop', 'Spoken English', 'Tailoring', 'Python', 'Welding', 'Maths', 'Video Editing'];
-  return (
-    <div className="mb-6">
-      <h3 className="font-semibold mb-2">{title}</h3>
-      <div className="grid grid-cols-2 gap-2">
-        {skills.map((s, i) => (
-          <label key={i} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={selected.includes(i)}
-              onChange={(e) => {
-                
-                if (e.target.checked) setSelected([...selected, i]);
-                else setSelected(selected.filter((x) => x !== i));
-              }}
-            />
-            {s}
-          </label>
-        ))}
-      </div>
+      <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+      <Link href="/" className="bg-blue-600 text-white px-4 py-2 rounded">Home</Link>
     </div>
   );
 }
