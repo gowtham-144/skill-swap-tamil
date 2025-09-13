@@ -5,15 +5,15 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function Dashboard() {
-  const { status } = useSession();          // ✅ no destructuring
+  const session = useSession(); // ← no destructuring
   const [list, setList] = useState<{ id: string; name: string; nameTa: string }[]>([]);
 
   useEffect(() => {
-    if (status === 'authenticated') fetch('/api/match').then(r => r.json()).then(setList);
-  }, [status]);
+    if (session.status === 'authenticated') fetch('/api/match').then(r => r.json()).then(setList);
+  }, [session.status]);
 
-  if (status === 'loading') return <p>Loading...</p>;
-  if (status === 'unauthenticated') return <p>Please log in</p>;
+  if (session.status === 'loading') return <p>Loading...</p>;
+  if (session.status === 'unauthenticated') return <p>Please log in</p>;
 
   return (
     <div className="p-8">
