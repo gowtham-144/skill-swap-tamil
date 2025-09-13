@@ -7,14 +7,11 @@ import Link from 'next/link';
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const [list, setList] = useState<{ id: string; name: string; nameTa: string }[]>([]);
-
   useEffect(() => {
     if (status === 'authenticated') fetch('/api/match').then(r => r.json()).then(setList);
   }, [status]);
-
   if (status === 'loading') return <p>Loading...</p>;
   if (status === 'unauthenticated') return <p>Please log in</p>;
-
   return (
     <div className="p-8">
       <h2 className="text-2xl font-bold mb-4">உங்கள் பொருத்தங்கள்</h2>
