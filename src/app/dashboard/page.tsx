@@ -1,11 +1,13 @@
 'use client';
 
+export const dynamic = 'force-dynamic'; // ✅ stops prerender
+
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function Dashboard() {
-  const session = useSession(); // ← no destructuring
+  const session = useSession(); // no destructuring
   const [list, setList] = useState<{ id: string; name: string; nameTa: string }[]>([]);
 
   useEffect(() => {
