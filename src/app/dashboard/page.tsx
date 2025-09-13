@@ -3,33 +3,66 @@
 export const dynamic = 'force-dynamic'; // ✅ stops prerender
 
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export default function Dashboard() {
+export default function Onboard() {
   const session = useSession(); // no destructuring
-  const [list, setList] = useState<{ id: string; name: string; nameTa: string }[]>([]);
-
-  useEffect(() => {
-    if (session.status === 'authenticated') fetch('/api/match').then(r => r.json()).then(setList);
-  }, [session.status]);
+  const router = useRouter();
+  const [teach, setTeach] = useState<number[]>([]);
+  const [learn, setLearn] = useState<number[]>([]);
 
   if (session.status === 'loading') return <p>Loading...</p>;
   if (session.status === 'unauthenticated') return <p>Please log in</p>;
 
+  async function submit() {
+    await fetch('/api/onboard', {
+      method: 'POST',
+      body: JSON.stringify({ teach, learn }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    router.push('/dashboard');
+  }
+
+  const skills = ['Arduino', 'Photoshop', 'Spoken English', 'Tailoring', 'Python', 'Welding', 'Maths', 'Video Editing'];
+
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4">உங்கள் பொருத்தங்கள்</h2>
-      {list.length === 0 && <p>இன்னும் பொருத்தம் இல்லை. மேலும் திறன்கள் சேர்க்கவும்.</p>}
-      {list.map((u) => (
-        <div key={u.id} className="border rounded p-4 mb-3 flex justify-between items-center">
-          <div>
-            <p className="font-semibold">{u.name}</p>
-            <p className="text-sm text-gray-600">உங்களிடம் <span className="font-medium">{u.nameTa}</span> கற்றுக்கொள்ள விரும்புகிறார்</p>
-          </div>
-          <Link href={`/chat/${u.id}`} className="bg-blue-600 text-white px-4 py-2 rounded">சாட்</Link>
-        </div>
-      ))}
+      <h2 className="text-2xl font-bold mb-4">திறன்களை தேர்ந்தெடுக்கவும்</h2>
+
+      <SkillCheck title="நீங்கள் கற்றுத் தர இயலும்" selected={teach} setSelected={setTeach} />
+      <SkillCheck title="நீங்கள் கற்றுக்கொள்ள விரும்பும்" selected={learn} setSelected={setLearn} />
+
+      <button onClick={submit} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">சேமி</button>
+    </div>
+  );
+}
+
+function SkillCheck({ title, selected, setSelected }: {
+  title: string;
+  selected: number[];
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+}) {
+  const skills = ['Arduino', 'Photoshop', 'Spoken English', 'Tailoring', 'Python', 'Welding', 'Maths', 'Video Editing'];
+  return (
+    <div className="mb-6">
+      <h3 className="font-semibold mb-2">{title}</h3>
+      <div className="grid grid-cols-2 gap-2">
+        {skills.map((s, i) => (
+          <label key={i} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={selected.includes(i)}
+              onChange={(e) => {
+                
+                if (e.target.checked) setSelected([...selected, i]);
+                else setSelected(selected.filter((x) => x !== i));
+              }}
+            />
+            {s}
+          </label>
+        ))}
+      </div>
     </div>
   );
 }
